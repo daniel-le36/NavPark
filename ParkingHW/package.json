@@ -1,0 +1,8 @@
+{
+  "name": "ParkingHW",
+  "version": "1.0.0",
+  "dependencies": {
+    "firebase": "^7.5.0",
+    "firebase-tools": "^7.8.1"
+  }
+}
