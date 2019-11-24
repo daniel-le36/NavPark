@@ -1,0 +1,61 @@
+#map {
+  height: 80%;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+  border: 10px solid #000;
+
+}
+/* Optional: Makes the sample page fill the window. */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#inputPanel {
+  position: absolute;
+  margin-top: 5px;
+  left: 25%;
+  z-index: 5;
+  background-color: #fff;
+  padding: 5px;
+  border: 2px solid #000;
+  text-align: center;
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino;
+  line-height: 30px;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#outputPanel {
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino;
+  margin-top: 0px;
+  border: 3px solid #000;
+  width: 20%;
+  margin-left: auto;
+  margin-right: auto;
+  height: 45px;
+  visibility: hidden;
+}
+
+#title {
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino;
+  margin-top: 10px;
+  font-size: 36px;
+  text-align: center;
+}
+
+#driveTime {
+  color: blue;
+}
+
+#walkTime {
+  color: red;
+}
+
+.textBox {
+  width: 300px;
+}
