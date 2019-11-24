@@ -4,5 +4,9 @@
   "dependencies": {
     "firebase": "^7.5.0",
     "firebase-tools": "^7.8.1"
+  },
+  "devDependencies": {
+    "eslint": "^6.7.0",
+    "eslint-plugin-promise": "^4.2.1"
   }
 }
