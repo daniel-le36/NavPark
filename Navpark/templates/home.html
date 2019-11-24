@@ -15,6 +15,7 @@
 <input id="text1" name="text" value = "">
 <input id="text2" name="text2" value = "">
 <input id="submitter" type="button">
+<input id="newCoords" type="button">
 
 
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
@@ -31,6 +32,22 @@
             success: function(data) {
                 $("#text1").val(data["newSum"]);
                 $("#text2").val(data["newSum"]);
+            }
+        });
+    });
+
+  $('#newCoords').on("click",function() {
+        var latitude = $("#text1").val();
+        var longitude = $("#text2").val();
+        
+        $.ajax({
+            url : "/get_parking?latitude="+latitude+"&longitude="+longitude,
+            method: 'GET',
+            contentType: 'application/json',
+            data : JSON.stringify({'latitude':latitude,'longitude':longitude}),
+            success: function(data) {
+                $("#text1").val(data["Parking_Coords"][0]);
+                $("#text2").val(data["Parking_Coords"][1]);
             }
         });
     });
