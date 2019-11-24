@@ -1,5 +1,5 @@
 #map {
-  height: 80%;
+  height: 60%;
   width: 80%;
   margin-left: auto;
   margin-right: auto;
@@ -7,11 +7,13 @@
   border: 10px solid #000;
 
 }
-/* Optional: Makes the sample page fill the window. */
+
 html, body {
-  height: 100%;
+  height: 110%;
   margin: 0;
   padding: 0;
+  background-color: #9cf3ff;
+  background-image: linear-gradient(#ff405c, purple);
 }
 
 #inputPanel {
@@ -28,24 +30,55 @@ html, body {
   width: 50%;
   margin-left: auto;
   margin-right: auto;
+  border-radius: 10px 10px 10px 10px;
+}
+
+#button {
+  border-radius: 7px 7px 7px 7px;
+  border: 1px solid #000;
+  background-color: white;
+}
+
+#inputStart {
+  border-radius: 7px 7px 7px 7px;
+  border: 1px solid #000;
+  padding-left: 3px;
+}
+
+#inputEnd {
+  border-radius: 7px 7px 7px 7px;
+  border: 1px solid #000;
+  padding-left: 3px;
 }
 
 #outputPanel {
   font-family: "Palatino Linotype", "Book Antiqua", Palatino;
   margin-top: 0px;
-  border: 3px solid #000;
+  border: 2px solid #000;
   width: 20%;
   margin-left: auto;
   margin-right: auto;
   height: 45px;
   visibility: hidden;
+  font-weight: bold;
+  border-radius: 10px 10px 10px 10px;
+  background-color: white;
+}
+
+#logo {
+  width: 300px;
+  height: 300px;
+  position: absolute;
+  margin-top: -40px;
+  margin-left: 25px;
 }
 
 #title {
   font-family: "Palatino Linotype", "Book Antiqua", Palatino;
-  margin-top: 10px;
-  font-size: 36px;
+  margin-top: 5px;
+  font-size: 42px;
   text-align: center;
+  color: white;
 }
 
 #driveTime {
