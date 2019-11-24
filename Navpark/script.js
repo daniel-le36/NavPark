@@ -48,6 +48,9 @@ function initMap() { //function ran when index.html starts (and API is retrieved
 
       };
       var onClickHandler = function() {
+        var finalCoords = getFinalCoordinates();
+        //ajax call: finalCoords[0], finalCoords[1]
+
         if (!document.getElementById('currentCheck').checked) {
           var geocoder = new google.maps.Geocoder();
           geocoder.geocode({'address': document.getElementById('inputStart').value}, function(results, status) { //function to get latlng of input
@@ -70,13 +73,17 @@ function initMap() { //function ran when index.html starts (and API is retrieved
       document.getElementById("currentCheck").disabled = true; //disable the checkbox
       document.getElementById("currentCheck").checked = false; //checkbox unchecked means app is not using current position
       var onClickHandler = function() { //when the Go button is clicked
+            var finalCoords = getFinalCoordinates();
+            //ajax call: finalCoords[0], finalCoords[1]
+            var parkingCoords = new google.maps.LatLng(parkingLatitude, parkingLongitude);
+
             var geocoder = new google.maps.Geocoder(); //create geocoder
             geocoder.geocode({'address': document.getElementById('inputStart').value}, function(results, status) { //replace 'end' with parking's location
             if (status == google.maps.GeocoderStatus.OK) { //if geocoder working
               var latitude = results[0].geometry.location.lat();
               var longitude = results[0].geometry.location.lng();
               var myLatLng = new google.maps.LatLng(latitude,longitude);
-              calculateDrivingRoute(directionsService, directionsRenderer, map, markerDriveHere, myLatLng);
+              calculateDrivingRoute(directionsService, directionsRenderer, map, markerDriveHere, myLatLng, parkingCoords);
             }
           });
         calculateWalkingRoute(directionsService2, directionsRenderer2, map, markerWalkHere);
@@ -90,8 +97,21 @@ function initMap() { //function ran when index.html starts (and API is retrieved
   }
 }
 
+function getFinalCoordinates() {
+  var geocoder = new google.maps.Geocoder();
+  geocoder.geocode({'address': document.getElementById('end').value}, function(results, status) { //replace 'end' with parking's location
+    if (status == google.maps.GeocoderStatus.OK) { //if geocoder working
+      var latitude = results[0].geometry.location.lat();
+      var longitude = results[0].geometry.location.lng();
+      return [latitude, longitude];
+    }
+  else {
+    alert("Error! Geocode API not working")
+  }
+})};
+
 // function for the driving portion of the route; from user's starting location to the parking location
-function calculateDrivingRoute(directionsService, directionsRenderer, map, marker, pos) {
+function calculateDrivingRoute(directionsService, directionsRenderer, map, marker, pos, parkingSpot) {
   var geocoder = new google.maps.Geocoder(); //set up geocoder
   geocoder.geocode({'address': document.getElementById('end').value}, function(results, status) { //replace 'end' with parking's location
     if (status == google.maps.GeocoderStatus.OK) { //if geocoder working
@@ -135,7 +155,7 @@ function calculateDrivingRoute(directionsService, directionsRenderer, map, marke
 }
 
 //exact same logic as above code, but with different points and using WALKING mode & markers
-function calculateWalkingRoute(directionsService, directionsRenderer, map, marker) {
+function calculateWalkingRoute(directionsService, directionsRenderer, map, marker, parkingSpot) {
   var geocoder = new google.maps.Geocoder();
   geocoder.geocode({'address': document.getElementById('inputEnd').value}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
