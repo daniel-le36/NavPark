@@ -6,7 +6,9 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
 import math
+import sys
 
 def distance_calc(p1,p2):
     return math.sqrt( ((p1[0]-p2[0])**2)+((p1[1]-p2[1])**2) )
@@ -14,7 +16,7 @@ def distance_calc(p1,p2):
 cred = credentials.Certificate('./london-data-47d52-9a3084ff0912.json')
 firebase_admin.initialize_app(cred)
 db = firestore.client()
-parkingDataCollname = "ParkingData"
+parkingDataCollname = "ParkingSpotData"
 dataColl = db.collection(parkingDataCollname)
 latitudes = []
 longitudes = []
@@ -33,9 +35,10 @@ coordArray = np.concatenate([np.array(latitudes).reshape(-1,1),np.array(longitud
 #Dataframe to store values
 df = pd.DataFrame(coordArray, columns = ['Latitude', 'Longitude'])
 df['GroupId'] = groupIds
-classifier = KNeighborsClassifier(n_neighbors=1)
+#classifier = KNeighborsClassifier(n_neighbors=1)
+classifier = DecisionTreeClassifier().fit(coordArray, groupIds)
+#classifier.fit(coordArray, groupIds)
 
-classifier.fit(coordArray, groupIds)
 
 app = Flask(__name__)
 
@@ -72,7 +75,7 @@ def get_parking():
     smallestDist = 10000
     smallestDistCoord = (0,0)
     for row in coordsInGroup.itertuples():
-        distance = distance_calc((42.986284,-81.240801),(row.Latitude,row.Longitude))
+        distance = distance_calc((latitude,longitude),(row.Latitude,row.Longitude))
         if distance < smallestDist:
             smallestDist = distance
             smallestDistCoord = (row.Latitude,row.Longitude)

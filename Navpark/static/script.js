@@ -20,11 +20,11 @@ function initMap() { //function ran when index.html starts (and API is retrieved
   //create the markers
   var markerDriveHere = new google.maps.Marker({
     title: "Drive Here",
-    icon:'images/driving.png'
+    icon:'/static/driving.png'
   });
   var markerWalkHere = new google.maps.Marker({
     title: "Walk Here",
-    icon:'images/walking.png'
+    icon:'/static/walking.png'
   });
   // Try HTML5 geolocation.
   if (navigator.geolocation) {
