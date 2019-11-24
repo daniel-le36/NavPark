@@ -1,64 +1,46 @@
 <!DOCTYPE html>
-<html lang='en'>
-<head>
-    <meta charset="UTF-8">
+<!--Marker images gotten from https://iconsplace.com/ (under a free license) -->
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>NavPark</title>
+    <link rel="stylesheet" href="/static/styles.css">
+  </head>
+  <body>
+    <br>
+    <center><b id ="title">NavPark</b></center>
+    <div id="inputPanel">
+      <!--FOR TESTING
+      start = user's beginning location (change to device's location later)
+      end = location of nearest parking thing (use external API later)
+      input = where user wants to go to (keep this the same)
+    -->
+    <b class="inputText">Use Current Location?</b>
+    <input type="checkbox" id="currentCheck">
+    <div id="divStart">
+      <!-- delete default searchbox values before submission -->
+    <b class="inputText">Starting Location: </b>
+      <input type="text" id="inputStart" value="1200 Western Road, London" class="textBox"/>
 
-    <title>ParkingTracker</title>
-
-</head>
-
-    <h1> Home Page</h1>
-
-<body>
-
-
-<input id="text1" name="text" value = "">
-<input id="text2" name="text2" value = "">
-<input id="submitter" type="button">
-<input id="newCoords" type="button">
-
-
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-<script type="text/javascript">
-  $('#submitter').on("click",function() {
-        var latitude = $("#text1").val();
-        var longitude = $("#text2").val();
-        
-        $.ajax({
-            url : '/newStuff',
-            method: 'POST',
-            contentType: 'application/json',
-            data : JSON.stringify({'latitude':latitude,'longitude':longitude}),
-            success: function(data) {
-                $("#text1").val(data["newSum"]);
-                $("#text2").val(data["newSum"]);
-            }
-        });
-    });
-
-  $('#newCoords').on("click",function() {
-        var latitude = $("#text1").val();
-        var longitude = $("#text2").val();
-        
-        $.ajax({
-            url : "/get_parking?latitude="+latitude+"&longitude="+longitude,
-            method: 'GET',
-            contentType: 'application/json',
-            data : JSON.stringify({'latitude':latitude,'longitude':longitude}),
-            success: function(data) {
-                $("#text1").val(data["Parking_Coords"][0]);
-                $("#text2").val(data["Parking_Coords"][1]);
-            }
-        });
-    });
-</script>
-
-
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
-</body>
+    </div>
+    <b class="inputText">Ending Location: </b>
+    <input type="text" id="inputEnd" value="1600 Amphitheatre Parkway, California" class="textBox"/><br>
+    <button type="button" id="button">Go</button>
+    </div>
+    <br><br><br><br><br><br><br><br>
+    <div id="outputPanel" visibility="hidden">
+      <div id="driveTime"></div>
+      <div id="walkTime"></div>
+    </div>
+    <div id="map"></div>
+    <select id="end"> <!--get rid of this later, when external API is implemented -->
+      <option value="chicago, il">Chicago</option>
+    </select>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript"></script>
+    <script src="/static/script.js"></script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzgcxQR06YFbO0fHTZhShAAhuNcanaoVc&libraries=places&callback=initMap">
+    </script>
+  </body>
 </html>
-

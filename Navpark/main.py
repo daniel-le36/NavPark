@@ -21,19 +21,20 @@ longitudes = []
 groupIds = []
 
 #Set up the classifier object to assign new coordinates to a group
-groupCoords = db.collection(parkingDataCollname).limit(25).stream()
+groupCoords = db.collection(parkingDataCollname).stream()
 for doc in groupCoords:
     #TODO:Check for empty dictionaries
     dictVal = doc.to_dict()
-    latitudes.append(dictVal['Latitude']) 
-    longitudes.append(dictVal['Longitude'])
-    groupIds.append(dictVal['GroupId'])
+    if any(dictVal):
+        latitudes.append(dictVal['Latitude']) 
+        longitudes.append(dictVal['Longitude'])
+        groupIds.append(dictVal['GroupId'])
 coordArray = np.concatenate([np.array(latitudes).reshape(-1,1),np.array(longitudes).reshape(-1,1)],1)
 #Dataframe to store values
 df = pd.DataFrame(coordArray, columns = ['Latitude', 'Longitude'])
 df['GroupId'] = groupIds
 classifier = KNeighborsClassifier(n_neighbors=1)
-print(groupIds)
+
 classifier.fit(coordArray, groupIds)
 
 app = Flask(__name__)

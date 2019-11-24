@@ -50,22 +50,36 @@ function initMap() { //function ran when index.html starts (and API is retrieved
       var onClickHandler = function() {
         var finalCoords = getFinalCoordinates();
         //ajax call: finalCoords[0], finalCoords[1]
-
+        var myLatLng = pos
         if (!document.getElementById('currentCheck').checked) {
           var geocoder = new google.maps.Geocoder();
           geocoder.geocode({'address': document.getElementById('inputStart').value}, function(results, status) { //function to get latlng of input
             if (status == google.maps.GeocoderStatus.OK) { //if geocoder working
               var latitude = results[0].geometry.location.lat(); //record the latitude and longitude under a GMaps LatLng variable to read
               var longitude = results[0].geometry.location.lng();
-              var myLatLng = new google.maps.LatLng(latitude,longitude);
-              calculateDrivingRoute(directionsService, directionsRenderer, map, markerDriveHere, myLatLng);
+              myLatLng = new google.maps.LatLng(latitude,longitude);
+              //calculateDrivingRoute(directionsService, directionsRenderer, map, markerDriveHere, myLatLng);
             }
           })
         }
-        else {
-          calculateDrivingRoute(directionsService, directionsRenderer, map, markerDriveHere, pos);
-        }
-        calculateWalkingRoute(directionsService2, directionsRenderer2, map, markerWalkHere);
+        var goPromise = new Promise(function(resolve,reject){
+          $.ajax({
+            url : "/get_parking?latitude="+latitude+"&longitude="+longitude,
+            method: 'GET',
+            contentType: 'application/json',
+            success: function(data) {
+              resolve(data);
+            },
+            error: function(data) {
+              reject()
+            }
+          });
+        });
+        goPromise.then(function(data){
+          parkingCoords = new google.maps.LatLng(data["latitude"],data["longitude"]);
+          calculateDrivingRoute(directionsService, directionsRenderer, map, markerDriveHere, myLatLng, parkingCoords);
+          calculateWalkingRoute(directionsService2, directionsRenderer2, map, markerWalkHere);
+        });
       };
       document.getElementById('button').addEventListener('click', onClickHandler);
       document.getElementById('currentCheck').addEventListener('change', onCheckHandler)
@@ -75,7 +89,7 @@ function initMap() { //function ran when index.html starts (and API is retrieved
       var onClickHandler = function() { //when the Go button is clicked
             var finalCoords = getFinalCoordinates();
             //ajax call: finalCoords[0], finalCoords[1]
-            var parkingCoords = new google.maps.LatLng(parkingLatitude, parkingLongitude);
+            //var parkingCoords = new google.maps.LatLng(parkingLatitude, parkingLongitude);
 
             var geocoder = new google.maps.Geocoder(); //create geocoder
             geocoder.geocode({'address': document.getElementById('inputStart').value}, function(results, status) { //replace 'end' with parking's location
@@ -83,10 +97,27 @@ function initMap() { //function ran when index.html starts (and API is retrieved
               var latitude = results[0].geometry.location.lat();
               var longitude = results[0].geometry.location.lng();
               var myLatLng = new google.maps.LatLng(latitude,longitude);
-              calculateDrivingRoute(directionsService, directionsRenderer, map, markerDriveHere, myLatLng, parkingCoords);
+              var goPromise = new Promise(function(resolve,reject){
+                $.ajax({
+                  url : "/get_parking?latitude="+latitude+"&longitude="+longitude,
+                  method: 'GET',
+                  contentType: 'application/json',
+                  success: function(data) {
+                    resolve(data);
+                  },
+                  error: function(data) {
+                    reject()
+                  }
+                });
+              });
+              goPromise.then(function(data){
+                var parkingCoords = new google.maps.LatLng(data["latitude"],data["longitude"]);
+                calculateDrivingRoute(directionsService, directionsRenderer, map, markerDriveHere, myLatLng, parkingCoords);
+                calculateWalkingRoute(directionsService2, directionsRenderer2, map, markerWalkHere);
+              });
             }
           });
-        calculateWalkingRoute(directionsService2, directionsRenderer2, map, markerWalkHere);
+        
       }
       document.getElementById('button').addEventListener('click', onClickHandler);
     });
@@ -99,7 +130,7 @@ function initMap() { //function ran when index.html starts (and API is retrieved
 
 function getFinalCoordinates() {
   var geocoder = new google.maps.Geocoder();
-  geocoder.geocode({'address': document.getElementById('end').value}, function(results, status) { //replace 'end' with parking's location
+  geocoder.geocode({'address': document.getElementById('inputEnd').value}, function(results, status) { //replace 'end' with parking's location
     if (status == google.maps.GeocoderStatus.OK) { //if geocoder working
       var latitude = results[0].geometry.location.lat();
       var longitude = results[0].geometry.location.lng();
